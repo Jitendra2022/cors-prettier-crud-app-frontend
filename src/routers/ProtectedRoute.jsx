@@ -2,43 +2,20 @@ import { Navigate, Outlet } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 
-// ===============================
-// Protected Route Component
-// ===============================
-// This component restricts access to routes
-// and allows only authenticated users
-// ===============================
-
 const ProtectedRoute = () => {
   const { auth, loading } = useContext(AuthContext);
-
-  // ===============================
-  // Loading State
-  // ===============================
-  // Wait until authentication check
-  // (refresh token API call) is finished
-  // ===============================
+  // Wait until auth finishes loading
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <p className="text-lg font-semibold text-gray-500">
+          Checking session...
+        </p>
+      </div>
+    );
   }
 
-  // ===============================
-  // Unauthorized Access
-  // ===============================
-  // If user is not authenticated,
-  // redirect to login page
-  // ===============================
-  if (!auth) {
-    return <Navigate to="/login" replace />;
-  }
-
-  // ===============================
-  // Authorized Access
-  // ===============================
-  // If user is authenticated,
-  // render the protected route
-  // ===============================
-  return <Outlet />;
+  return auth ? <Outlet /> : <Navigate to="/login" replace />;
 };
 
 export default ProtectedRoute;
